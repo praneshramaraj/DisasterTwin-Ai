@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { MapContainer, TileLayer, GeoJSON, Marker, Popup, Polyline, CircleMarker, useMap } from 'react-leaflet';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { MapContainer, TileLayer, GeoJSON, Marker, Popup, Polyline, CircleMarker, useMap, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import { Activity, Users, AlertTriangle, Layers, ShieldCheck, Navigation, ShieldAlert, Sparkles, Route as RouteIcon, AlertOctagon, CheckCircle2, ChevronRight, X } from 'lucide-react';
 import { fetchRoute } from '../utils/api';
@@ -26,7 +26,7 @@ const CHENNAI_CENTER = [12.9800, 80.2000];
 const PALANI_CENTER = [10.4500, 77.5200];
 
 const RISK_COLORS = {
-  LOW: { fill: '#eab308', stroke: '#eab308', opacity: 0.22 },
+  LOW: { fill: '#3b82f6', stroke: '#3b82f6', opacity: 0.22 },
   MEDIUM: { fill: '#f97316', stroke: '#f97316', opacity: 0.28 },
   HIGH: { fill: '#ea580c', stroke: '#ea580c', opacity: 0.35 },
   CRITICAL: { fill: '#ef4444', stroke: '#ef4444', opacity: 0.42 },
@@ -58,7 +58,6 @@ function createTacticalIcon(label, badgeColor, glowColor, symbol) {
     `,
     iconSize: [42, 22],
     iconAnchor: [21, 11],
-    popupAnchor: [0, -14],
   });
 }
 
@@ -162,11 +161,15 @@ const rescueIcon = createTacticalIcon('R', '#0f172a', '#f59e0b', '🚁');
 
 function MapUpdater({ area, defaultCenter, defaultZoom }) {
   const map = useMap();
+  const prevAreaRef = useRef(area);
+
   useEffect(() => {
-    if (defaultCenter) {
+    if (prevAreaRef.current !== area) {
+      prevAreaRef.current = area;
       map.setView(defaultCenter, defaultZoom, { animate: false });
     }
   }, [area, defaultCenter, defaultZoom, map]);
+
   return null;
 }
 
@@ -538,8 +541,6 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
                   <span className={`status-pill ${bestRecommended === 'Route B' ? 'risk-critical' : 'risk-low'}`}>
                     {bestRecommended === 'Route B' ? '🔴 FLOODED / UNAVAILABLE' : 'FASTEST'}
                   </span>
-                </div>
-                <div className="m-item-details">
                   <span>{activeRouteData?.route_a?.distance_km || 3.1} km</span> • <span>{activeRouteData?.route_a?.duration_min || 7.5} min</span> • <span style={{ color: bestRecommended === 'Route B' ? '#ef4444' : '#3b82f6', fontWeight: 800 }}>
                     {bestRecommended === 'Route B' ? '🔴 SEVERE WATER LOGGING' : '🔵 CLEAR'}
                   </span>
@@ -576,9 +577,16 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
       <MapContainer
         center={defaultCenter}
         zoom={defaultZoom}
+        minZoom={8}
+        maxZoom={18}
+        scrollWheelZoom={true}
+        doubleClickZoom={true}
+        touchZoom={true}
+        boxZoom={true}
         style={{ height: '100%', width: '100%', background: '#040711' }}
         zoomControl={false}
       >
+        <ZoomControl position="bottomright" />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"

@@ -85,28 +85,19 @@ def get_initial_city_state(area: str = "chennai") -> List[Zone]:
 
 import math
 
-# Helper to create realistic, organic, undefined flood inundation shapes dynamically scaled to flood amount
-def _poly(lat: float, lng: float, water_m: float = 0.2, rain_mm: float = 10.0, seed: int = 1) -> List[List[float]]:
-    intensity = max(0.25, (water_m * 1.5) + (rain_mm / 80.0))
-    base_size = 0.005 + min(0.016, intensity * 0.006)
-    
-    num_vertices = 14
+# Helper to create realistic, organic, undefined flood inundation shapes (12 irregular vertices)
+def _poly(lat: float, lng: float, size: float = 0.010, seed: int = 1, **kwargs) -> List[List[float]]:
     points = []
-    
+    num_vertices = 12
     for i in range(num_vertices):
         angle = (2 * math.pi * i) / num_vertices
-        h1 = math.sin(2 * angle + seed * 1.3)
-        h2 = math.cos(3 * angle - seed * 0.7) * (intensity * 0.4)
-        h3 = math.sin(5 * angle + seed * 2.1) * 0.25
-        
-        radius_modifier = 1.0 + (0.30 * h1) + (0.25 * h2) + h3
-        r_lat = base_size * radius_modifier * 0.85
-        r_lng = base_size * radius_modifier * 1.15
+        radius_modifier = 1.0 + 0.35 * math.sin(3 * angle + seed) + 0.20 * math.cos(5 * angle - seed)
+        r_lat = size * radius_modifier * 0.85
+        r_lng = size * radius_modifier * 1.15
         
         pt_lat = lat + r_lat * math.sin(angle)
         pt_lng = lng + r_lng * math.cos(angle)
         points.append([round(pt_lat, 6), round(pt_lng, 6)])
-        
     return points
 
 def _get_chennai_state() -> List[Zone]:

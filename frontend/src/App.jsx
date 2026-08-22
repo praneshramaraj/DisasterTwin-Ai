@@ -328,22 +328,14 @@ export default function App() {
 
 // Offline demo state
 function getOfflineDemoState(area = 'chennai') {
-  const poly = (lat, lng, water = 0.2, rain = 10.0, seed = 1) => {
-    const intensity = Math.max(0.25, (water * 1.5) + (rain / 80.0));
-    const baseSize = 0.005 + Math.min(0.016, intensity * 0.006);
-
+  const poly = (lat, lng, size = 0.010, seed = 1) => {
     const points = [];
-    const numVertices = 14;
+    const numVertices = 12;
     for (let i = 0; i < numVertices; i++) {
       const angle = (2 * Math.PI * i) / numVertices;
-      const h1 = Math.sin(2 * angle + seed * 1.3);
-      const h2 = Math.cos(3 * angle - seed * 0.7) * (intensity * 0.4);
-      const h3 = Math.sin(5 * angle + seed * 2.1) * 0.25;
-
-      const radiusModifier = 1.0 + (0.30 * h1) + (0.25 * h2) + h3;
-      const rLat = baseSize * radiusModifier * 0.85;
-      const rLng = baseSize * radiusModifier * 1.15;
-
+      const radiusModifier = 1.0 + 0.35 * Math.sin(3 * angle + seed) + 0.20 * Math.cos(5 * angle - seed);
+      const rLat = size * radiusModifier * 0.85;
+      const rLng = size * radiusModifier * 1.15;
       points.push([
         Number((lat + rLat * Math.sin(angle)).toFixed(6)),
         Number((lng + rLng * Math.cos(angle)).toFixed(6))

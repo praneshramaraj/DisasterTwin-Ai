@@ -610,6 +610,36 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
           aiDecisionTrace={aiDecisionTrace}
         />
 
+        {/* ☢️ RADIATION / HIGH-RISK EPICENTER PULSE RINGS FOR ALL CITIES */}
+        {zones.map((zone, i) => {
+          const isHighRisk = zone.risk_level === 'CRITICAL' || zone.risk_level === 'HIGH';
+          if (!isHighRisk || !zone.polygon || zone.polygon.length === 0) return null;
+          const centerLat = zone.polygon.reduce((sum, p) => sum + p[0], 0) / zone.polygon.length;
+          const centerLng = zone.polygon.reduce((sum, p) => sum + p[1], 0) / zone.polygon.length;
+          const color = zone.risk_level === 'CRITICAL' ? '#ef4444' : '#f97316';
+
+          return (
+            <Marker
+              key={`epicenter-pulse-${zone.id}-${i}-${area}`}
+              position={[centerLat, centerLng]}
+              icon={L.divIcon({
+                className: 'epicenter-pulse-ring-wrapper',
+                html: `
+                  <div style="position:relative; width:36px; height:36px; transform:translate(-50%, -50%); pointer-events:none;">
+                    <div style="position:absolute; width:36px; height:36px; border-radius:50%; background:${color}; opacity:0.45; animation:pulse-ring 1.5s infinite;"></div>
+                    <div style="position:absolute; top:4px; left:4px; width:28px; height:28px; border-radius:50%; background:#090d16; border:3px solid ${color}; box-shadow:0 0 16px ${color}; display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:12px; font-weight:800;">
+                      ☢️
+                    </div>
+                  </div>
+                `,
+                iconSize: [36, 36],
+                iconAnchor: [18, 18],
+              })}
+              zIndexOffset={1800}
+            />
+          );
+        })}
+
         {/* DIRECTIONS & ROUTE POLYLINES (SHOW ONLY ON DIGITAL TWIN MAP & AI COMMANDER) */}
         {showDirections && (
           <>
@@ -683,7 +713,7 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
             {/* 🔵 CLEAN CURRENT LOCATION / ORIGIN MARKER */}
             {activeRouteData && (
               <Marker position={activeRouteData.startPos} icon={currentLocationMarkerIcon}>
-                <Popup><strong>🔵 ORIGIN: {aiDecisionTrace?.origin_location || 'ADYAR COMMAND CENTER'}</strong></Popup>
+                <Popup><strong>🔵 ORIGIN: {aiDecisionTrace?.origin_location || `${(area || 'CHENNAI').toUpperCase()} TACTICAL COMMAND CENTER`}</strong></Popup>
               </Marker>
             )}
 

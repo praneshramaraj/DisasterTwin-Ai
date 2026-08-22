@@ -160,13 +160,13 @@ const hospitalIcon = createTacticalIcon('H', '#0f172a', '#10b981', '🏥');
 const shelterIcon = createTacticalIcon('S', '#0f172a', '#3b82f6', '🏠');
 const rescueIcon = createTacticalIcon('R', '#0f172a', '#f59e0b', '🚁');
 
-function MapUpdater({ center, zoom }) {
+function MapUpdater({ area, defaultCenter, defaultZoom }) {
   const map = useMap();
   useEffect(() => {
-    if (center) {
-      map.flyTo(center, zoom || 12, { animate: true, duration: 1.2 });
+    if (defaultCenter) {
+      map.setView(defaultCenter, defaultZoom, { animate: false });
     }
-  }, [center, zoom, map]);
+  }, [area, defaultCenter, defaultZoom, map]);
   return null;
 }
 
@@ -586,7 +586,7 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
           maxZoom={19}
         />
 
-        <MapUpdater center={mapCenter} zoom={selectedZoneObj ? 13 : defaultZoom} />
+        <MapUpdater area={area} defaultCenter={defaultCenter} defaultZoom={defaultZoom} />
 
         {/* Flood Risk Polygons */}
         <ZonePolygons

@@ -720,24 +720,42 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
           </>
         )}
 
-        {/* Hospitals */}
-        {layers.hospitals && allHospitals.map(h => (
-          <Marker key={h.id} position={[h.lat, h.lng]} icon={hospitalIcon}>
-            <Popup><strong>🏥 HOSPITAL: {h.name}</strong></Popup>
+        {/* Hospitals (H) */}
+        {layers.hospitals && allHospitals.map((h, idx) => (
+          <Marker key={`hosp-${h.id}-${idx}-${area}`} position={[h.lat, h.lng]} icon={createTacticalIcon(h.name, '#090d16', '#10b981', '🏥')}>
+            <Popup>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
+                <strong style={{ color: '#10b981' }}>🏥 HOSPITAL: {h.name}</strong><br/>
+                Capacity: {h.capacity} beds • Operational: {h.operational ? 'Yes' : 'No'}<br/>
+                Flood Risk Level: {Math.round((h.flood_risk || 0) * 100)}%
+              </div>
+            </Popup>
           </Marker>
         ))}
 
-        {/* Shelters */}
-        {layers.shelters && allShelters.map(s => (
-          <Marker key={s.id} position={[s.lat, s.lng]} icon={shelterIcon}>
-            <Popup><strong>🏠 SHELTER: {s.name}</strong></Popup>
+        {/* Shelters (S) */}
+        {layers.shelters && allShelters.map((s, idx) => (
+          <Marker key={`shelter-${s.id}-${idx}-${area}`} position={[s.lat, s.lng]} icon={createTacticalIcon(s.name, '#090d16', '#3b82f6', '🏠')}>
+            <Popup>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
+                <strong style={{ color: '#3b82f6' }}>🏠 RELIEF SHELTER: {s.name}</strong><br/>
+                Capacity: {s.capacity} • Current Occupancy: {s.current_occupancy}<br/>
+                Supplies Reserve: {s.supplies_days} Days
+              </div>
+            </Popup>
           </Marker>
         ))}
 
-        {/* Rescue Teams */}
-        {layers.rescue && allRescue.map(r => (
-          <Marker key={r.id} position={[r.lat, r.lng]} icon={rescueIcon}>
-            <Popup><strong>🚁 RESCUE TEAM: {r.name}</strong></Popup>
+        {/* Rescue Teams (R) */}
+        {layers.rescue && allRescue.map((r, idx) => (
+          <Marker key={`rescue-${r.id}-${idx}-${area}`} position={[r.lat, r.lng]} icon={createTacticalIcon(r.name, '#090d16', '#f59e0b', '🚁')}>
+            <Popup>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
+                <strong style={{ color: '#f59e0b' }}>🚁 RESCUE TEAM: {r.name}</strong><br/>
+                Personnel: {r.personnel} • Rescue Boats: {r.boats}<br/>
+                Deployment Status: {(r.status || 'ACTIVE').toUpperCase()}
+              </div>
+            </Popup>
           </Marker>
         ))}
       </MapContainer>

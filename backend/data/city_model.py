@@ -89,11 +89,12 @@ import math
 def _poly(lat: float, lng: float, size: float = 0.010, seed: int = 1, **kwargs) -> List[List[float]]:
     points = []
     num_vertices = 12
+    actual_size = 0.010
     for i in range(num_vertices):
         angle = (2 * math.pi * i) / num_vertices
         radius_modifier = 1.0 + 0.35 * math.sin(3 * angle + seed) + 0.20 * math.cos(5 * angle - seed)
-        r_lat = size * radius_modifier * 0.85
-        r_lng = size * radius_modifier * 1.15
+        r_lat = actual_size * radius_modifier * 0.85
+        r_lng = actual_size * radius_modifier * 1.15
         
         pt_lat = lat + r_lat * math.sin(angle)
         pt_lng = lng + r_lng * math.cos(angle)

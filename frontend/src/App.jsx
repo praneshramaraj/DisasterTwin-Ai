@@ -409,7 +409,7 @@ function getOfflineDemoState(area = 'chennai') {
       drainage_capacity: 0.5,
       current_water_level_m: water,
       rainfall_mm: rain,
-      polygon: poly(lat, lng, water, rain, i + 1),
+      polygon: poly(lat, lng, 0.010, i + 1),
       risk_score: lvl === 'CRITICAL' ? 0.88 : (lvl === 'HIGH' ? 0.68 : (lvl === 'MEDIUM' ? 0.42 : 0.2)),
       risk_level: lvl,
       hospitals: [{ id: `H${i+1}`, name: `${name} Hospital`, lat, lng, capacity: 250, operational: true, flood_risk: water / 2.0 }],

@@ -285,7 +285,7 @@ def _get_coimbatore_state() -> List[Zone]:
 
     return [
         Zone(
-            id=zid, name=name, polygon=_poly(lat, lng),
+            id=zid, name=name, polygon=_poly(lat, lng, seed=i+1),
             population=pop, vulnerable_population=int(pop * 0.18), elevation_m=410.0, drainage_capacity=0.6, current_water_level_m=water, rainfall_mm=rain,
             risk_score=0.85 if lvl == "CRITICAL" else (0.65 if lvl == "HIGH" else (0.45 if lvl == "MEDIUM" else 0.2)), risk_level=lvl,
             hospitals=[Hospital(id=f"CH{i+1}", name=f"{name} City GH", lat=lat, lng=lng, capacity=300, operational=True, flood_risk=water/2.0)],
@@ -312,7 +312,7 @@ def _get_madurai_state() -> List[Zone]:
 
     return [
         Zone(
-            id=zid, name=name, polygon=_poly(lat, lng),
+            id=zid, name=name, polygon=_poly(lat, lng, seed=i+1),
             population=pop, vulnerable_population=int(pop * 0.18), elevation_m=101.0, drainage_capacity=0.5, current_water_level_m=water, rainfall_mm=rain,
             risk_score=0.88 if lvl == "CRITICAL" else (0.68 if lvl == "HIGH" else (0.42 if lvl == "MEDIUM" else 0.22)), risk_level=lvl,
             hospitals=[Hospital(id=f"MH{i+1}", name=f"{name} Hospital", lat=lat, lng=lng, capacity=350, operational=True, flood_risk=water/2.0)],
@@ -339,7 +339,7 @@ def _get_cuddalore_state() -> List[Zone]:
 
     return [
         Zone(
-            id=zid, name=name, polygon=_poly(lat, lng),
+            id=zid, name=name, polygon=_poly(lat, lng, seed=i+1),
             population=pop, vulnerable_population=int(pop * 0.22), elevation_m=3.0, drainage_capacity=0.3, current_water_level_m=water, rainfall_mm=rain,
             risk_score=0.92 if lvl == "CRITICAL" else (0.72 if lvl == "HIGH" else (0.45 if lvl == "MEDIUM" else 0.25)), risk_level=lvl,
             hospitals=[Hospital(id=f"CDH{i+1}", name=f"{name} Coastal GH", lat=lat, lng=lng, capacity=250, operational=True, flood_risk=water/2.0)],
@@ -366,7 +366,7 @@ def _get_thoothukudi_state() -> List[Zone]:
 
     return [
         Zone(
-            id=zid, name=name, polygon=_poly(lat, lng),
+            id=zid, name=name, polygon=_poly(lat, lng, seed=i+1),
             population=pop, vulnerable_population=int(pop * 0.20), elevation_m=2.0, drainage_capacity=0.25, current_water_level_m=water, rainfall_mm=rain,
             risk_score=0.94 if lvl == "CRITICAL" else (0.70 if lvl == "HIGH" else (0.42 if lvl == "MEDIUM" else 0.22)), risk_level=lvl,
             hospitals=[Hospital(id=f"TH{i+1}", name=f"{name} Govt Medical College", lat=lat, lng=lng, capacity=400, operational=True, flood_risk=water/2.0)],

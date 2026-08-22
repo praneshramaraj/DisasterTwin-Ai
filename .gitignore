@@ -1,7 +1,13 @@
 node_modules/
 build/
+dist/
+.env
 .env.local
 frontend/.env.local
-backend/uploads/*
-!backend/uploads/.gitkeep
-.env
+backend/.env
+backend/__pycache__/
+backend/**/__pycache__/
+**/__pycache__/
+*.pyc
+.DS_Store
+backend/venv/

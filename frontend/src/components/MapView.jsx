@@ -46,18 +46,18 @@ const ROAD_STATUS_COLORS = {
   blocked: '#ef4444',
 };
 
-// Tactical Command Center Markers
-function createTacticalIcon(label, badgeColor, glowColor, symbol) {
+// Tactical Command Center Markers with Glassmorphism & Micro-Glow
+function createTacticalIcon(shortCode, badgeColor, glowColor, symbol) {
   return L.divIcon({
     className: 'tactical-marker',
     html: `
-      <div class="tactical-badge" style="background:${badgeColor}; border-color:${glowColor}; box-shadow:0 0 10px ${glowColor};">
-        <span class="badge-symbol">${symbol}</span>
-        <span class="badge-label">${label}</span>
+      <div class="tactical-badge" style="background:rgba(9,13,22,0.95); border:1.5px solid ${glowColor}; box-shadow:0 0 12px ${glowColor}; backdrop-filter:blur(6px);">
+        <span class="badge-symbol" style="font-size:13px; line-height:1;">${symbol}</span>
+        <span class="badge-label" style="font-family:'JetBrains Mono',monospace; font-weight:800; font-size:11px; color:#ffffff; letter-spacing:0.4px;">${shortCode}</span>
       </div>
     `,
-    iconSize: [42, 22],
-    iconAnchor: [21, 11],
+    iconSize: [110, 26],
+    iconAnchor: [55, 13],
   });
 }
 
@@ -721,43 +721,52 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
         )}
 
         {/* Hospitals (H) */}
-        {layers.hospitals && allHospitals.map((h, idx) => (
-          <Marker key={`hosp-${h.id}-${idx}-${area}`} position={[h.lat, h.lng]} icon={createTacticalIcon(h.name, '#090d16', '#10b981', '🏥')}>
-            <Popup>
-              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
-                <strong style={{ color: '#10b981' }}>🏥 HOSPITAL: {h.name}</strong><br/>
-                Capacity: {h.capacity} beds • Operational: {h.operational ? 'Yes' : 'No'}<br/>
-                Flood Risk Level: {Math.round((h.flood_risk || 0) * 100)}%
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {layers.hospitals && allHospitals.map((h, idx) => {
+          const shortName = h.name.replace(' Hospital', '').replace(' GH', '').replace(' Fortis', '');
+          return (
+            <Marker key={`hosp-${h.id}-${idx}-${area}`} position={[h.lat, h.lng]} icon={createTacticalIcon(`H-${shortName}`, '#090d16', '#10b981', '🏥')}>
+              <Popup>
+                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
+                  <strong style={{ color: '#10b981' }}>🏥 HOSPITAL: {h.name}</strong><br/>
+                  Capacity: {h.capacity} beds • Operational: {h.operational ? 'Yes' : 'No'}<br/>
+                  Flood Risk Level: {Math.round((h.flood_risk || 0) * 100)}%
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
 
         {/* Shelters (S) */}
-        {layers.shelters && allShelters.map((s, idx) => (
-          <Marker key={`shelter-${s.id}-${idx}-${area}`} position={[s.lat, s.lng]} icon={createTacticalIcon(s.name, '#090d16', '#3b82f6', '🏠')}>
-            <Popup>
-              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
-                <strong style={{ color: '#3b82f6' }}>🏠 RELIEF SHELTER: {s.name}</strong><br/>
-                Capacity: {s.capacity} • Current Occupancy: {s.current_occupancy}<br/>
-                Supplies Reserve: {s.supplies_days} Days
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {layers.shelters && allShelters.map((s, idx) => {
+          const shortName = s.name.replace(' Relief Shelter', '').replace(' Shelter', '').replace(' Center', '').replace(' Mandapam', '');
+          return (
+            <Marker key={`shelter-${s.id}-${idx}-${area}`} position={[s.lat, s.lng]} icon={createTacticalIcon(`S-${shortName}`, '#090d16', '#3b82f6', '🏠')}>
+              <Popup>
+                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
+                  <strong style={{ color: '#3b82f6' }}>🏠 RELIEF SHELTER: {s.name}</strong><br/>
+                  Capacity: {s.capacity} • Current Occupancy: {s.current_occupancy}<br/>
+                  Supplies Reserve: {s.supplies_days} Days
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
 
         {/* Rescue Teams (R) */}
-        {layers.rescue && allRescue.map((r, idx) => (
-          <Marker key={`rescue-${r.id}-${idx}-${area}`} position={[r.lat, r.lng]} icon={createTacticalIcon(r.name, '#090d16', '#f59e0b', '🚁')}>
-            <Popup>
-              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
-                <strong style={{ color: '#f59e0b' }}>🚁 RESCUE TEAM: {r.name}</strong><br/>
-                Personnel: {r.personnel} • Rescue Boats: {r.boats}<br/>
-                Deployment Status: {(r.status || 'ACTIVE').toUpperCase()}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {layers.rescue && allRescue.map((r, idx) => {
+          const shortName = r.name.replace(' Rescue Unit', '').replace(' Team', '').replace(' Squad', '').replace(' NDRF', '');
+          return (
+            <Marker key={`rescue-${r.id}-${idx}-${area}`} position={[r.lat, r.lng]} icon={createTacticalIcon(`R-${shortName}`, '#090d16', '#f59e0b', '🚁')}>
+              <Popup>
+                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 12 }}>
+                  <strong style={{ color: '#f59e0b' }}>🚁 RESCUE TEAM: {r.name}</strong><br/>
+                  Personnel: {r.personnel} • Rescue Boats: {r.boats}<br/>
+                  Deployment Status: {(r.status || 'ACTIVE').toUpperCase()}
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );

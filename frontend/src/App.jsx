@@ -434,13 +434,13 @@ function getOfflineDemoState(area = 'chennai') {
       polygon: poly(lat, lng, 0.010, i + 1),
       risk_score: lvl === 'CRITICAL' ? 0.88 : (lvl === 'HIGH' ? 0.68 : (lvl === 'MEDIUM' ? 0.42 : 0.2)),
       risk_level: lvl,
-      hospitals: [{ id: `H${i+1}`, name: `${name} Hospital`, lat, lng, capacity: 250, operational: true, flood_risk: water / 2.0 }],
-      shelters: [{ id: `S${i+1}`, name: `${name} Relief Shelter`, lat: lat + 0.002, lng: lng + 0.002, capacity: 1200, current_occupancy: 100, supplies_days: 7 }],
+      hospitals: [{ id: `H${i+1}`, name: `${name} Hospital`, lat: lat + 0.003, lng: lng - 0.003, capacity: 250, operational: true, flood_risk: water / 2.0 }],
+      shelters: [{ id: `S${i+1}`, name: `${name} Relief Shelter`, lat: lat + 0.003, lng: lng + 0.003, capacity: 1200, current_occupancy: 100, supplies_days: 7 }],
       roads: [
         { id: `R${i+1}_A`, name: `${name} Main Road`, from_zone: zid, to_zone: 'Z1', status: water > 0.5 ? 'flooded' : 'open', flood_depth_m: water, is_evacuation_route: true, road_type: 'Main Road', coordinates: [[lat - 0.005, lng - 0.005], [lat, lng], [lat + 0.005, lng + 0.005]] },
         { id: `R${i+1}_B`, name: `${name} Link Expressway`, from_zone: zid, to_zone: 'Z2', status: 'open', flood_depth_m: 0.1, is_evacuation_route: true, road_type: 'Highway', coordinates: [[lat - 0.003, lng - 0.006], [lat, lng], [lat + 0.004, lng + 0.004]] }
       ],
-      rescue_teams: [{ id: `RT${i+1}`, name: `${name} Rescue Unit`, lat, lng, personnel: 25, boats: 6, status: 'active', assigned_zone: zid }]
+      rescue_teams: [{ id: `RT${i+1}`, name: `${name} Rescue Unit`, lat: lat - 0.003, lng: lng, personnel: 25, boats: 6, status: 'active', assigned_zone: zid }]
     }))
   };
 }

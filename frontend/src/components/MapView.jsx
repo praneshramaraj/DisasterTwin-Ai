@@ -320,17 +320,24 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
       return dist < min.dist ? { rescue: r, dist } : min;
     }, { rescue: allRescue[0], dist: Infinity }).rescue : { name: "NDRF Rescue Unit", lat: startLat + 0.002, lng: startLon + 0.002 };
 
-    // Synchronous 0ms instant route state update for zero lag
+    // Synchronous 0ms instant ordered road route connecting YOU -> Rescue Team -> Hospital -> Shelter
     const instantPtsA = [
       [startLat, startLon],
-      [(startLat + targetRescue.lat)/2 + 0.001, (startLon + targetRescue.lng)/2 + 0.001],
+      [targetRescue.lat, startLon],
       [targetRescue.lat, targetRescue.lng],
-      [(targetRescue.lat + targetHospital.lat)/2 + 0.001, (targetRescue.lng + targetHospital.lng)/2 + 0.001],
+      [targetHospital.lat, targetRescue.lng],
       [targetHospital.lat, targetHospital.lng],
-      [(targetHospital.lat + targetShelter.lat)/2 + 0.001, (targetHospital.lng + targetShelter.lng)/2 + 0.001],
+      [targetHospital.lat, targetShelter.lng],
       [targetShelter.lat, targetShelter.lng]
     ];
-    const instantPtsB = instantPtsA.map(([l, g]) => [l + 0.003, g - 0.003]);
+    const instantPtsB = [
+      [startLat, startLon],
+      [startLat + 0.004, startLon - 0.004],
+      [targetRescue.lat + 0.004, targetRescue.lng - 0.004],
+      [targetHospital.lat + 0.004, targetHospital.lng + 0.004],
+      [targetShelter.lat + 0.004, targetShelter.lng + 0.004],
+      [targetShelter.lat, targetShelter.lng]
+    ];
 
     setActiveRouteData({
       status: "success",

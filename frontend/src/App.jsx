@@ -328,20 +328,16 @@ export default function App() {
 
 // Offline demo state
 function getOfflineDemoState(area = 'chennai') {
-  const poly = (lat, lng, size = 0.010, seed = 1) => {
-    const points = [];
-    const numVertices = 12;
-    for (let i = 0; i < numVertices; i++) {
-      const angle = (2 * Math.PI * i) / numVertices;
-      const radiusModifier = 1.0 + 0.35 * Math.sin(3 * angle + seed) + 0.20 * Math.cos(5 * angle - seed);
-      const rLat = size * radiusModifier * 0.85;
-      const rLng = size * radiusModifier * 1.15;
-      points.push([
-        Number((lat + rLat * Math.sin(angle)).toFixed(6)),
-        Number((lng + rLng * Math.cos(angle)).toFixed(6))
-      ]);
-    }
-    return points;
+  const poly = (lat, lng) => {
+    const half = 0.004;
+    const dLat = half * 0.85;
+    const dLng = half * 1.15;
+    return [
+      [Number((lat + dLat).toFixed(6)), Number((lng - dLng).toFixed(6))],
+      [Number((lat + dLat).toFixed(6)), Number((lng + dLng).toFixed(6))],
+      [Number((lat - dLat).toFixed(6)), Number((lng + dLng).toFixed(6))],
+      [Number((lat - dLat).toFixed(6)), Number((lng - dLng).toFixed(6))],
+    ];
   };
 
   const cityData = {

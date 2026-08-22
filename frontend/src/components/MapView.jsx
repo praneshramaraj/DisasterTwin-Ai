@@ -387,7 +387,7 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
 
     loadOsmRoute();
     return () => { isMounted = false; };
-  }, [selectedZoneObj, allShelters, allHospitals, allRescue, mapCenter, area, allRoads, isPalani]);
+  }, [selectedZoneObj?.id, area]);
 
   const bestRecommended = activeRouteData?.best_recommended_route || "Route A";
   const activeRouteFocus = selectedRouteChoice === 'auto' ? (bestRecommended === "Route B" ? "route_b" : "route_a") : selectedRouteChoice;
@@ -583,6 +583,7 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
         doubleClickZoom={true}
         touchZoom={true}
         boxZoom={true}
+        preferCanvas={true}
         style={{ height: '100%', width: '100%', background: '#040711' }}
         zoomControl={false}
       >
@@ -592,6 +593,10 @@ export default function MapView({ twinState, selectedZone, onZoneClick, aiDecisi
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           subdomains="abcd"
           maxZoom={19}
+          tileSize={256}
+          keepBuffer={8}
+          updateWhenIdle={false}
+          updateWhenZooming={false}
         />
 
         <MapUpdater area={area} defaultCenter={defaultCenter} defaultZoom={defaultZoom} />
